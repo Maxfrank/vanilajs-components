@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>ToDo List</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, intial-scale=1">
+  </head>
+  <body>
+    <div class="main">
+      <span id="active"></span>
+      <span id="all"></span>
+      <span id="done"></span>
+      <div class="inputContainer">
+        <input type="text" id="newTaskName" name="task">
+        <button onclick="toDoList.addTask()">ADD</button>
+      </div>
+      <div class="listContainer">
+        <ul></ul>
+        <a id="clear" onclick="toDoList.clearList()">Clear</a>
+      </div>
+    </div>
+    <script>
+
+      class ToDoList {
+        constructor() {
+          this.ul = document.querySelector('ul');
+          this.active = document.querySelector('#active');
+          this.all = document.querySelector('#all');
+          this.done = document.querySelector('#done');
+          this.activeTasks = 0, this.allTasks = 0;
+        }
+        addTask() {
+          const li = document.createElement('li');
+          const input = document.querySelector('input#newTaskName');
+          if(!input.value) {
+            return;
+          }
+          li.innerHTML = `<span onclick="toDoList.tickTask(event)">${input.value}</span>
+            <span onclick="toDoList.deleteTask(event)" class="delete">x</span>`;
+          this.ul.appendChild(li);
+          input.value = '';
+          this.activeTasks++;
+          this.allTasks++;
+          this.updateNumbers();
+        }
+
+        clearList() {
+          this.ul.innerHTML = '';
+          this.activeTasks = 0, this.allTasks = 0;
+          this.updateNumbers();
+        }
+
+        deleteTask(e) {
+          const liToDelete = e.target.parentNode;
+          const task = e.target.previousElementSibling;
+          this.allTasks--;
+          if(task.style.textDecoration !== 'line-through') {
+            this.activeTasks--;
+          }
+          this.ul.removeChild(liToDelete);
+          this.updateNumbers();
+        }
+
+        tickTask(e) {
+          const task = e.target;
+          if(task.style.textDecoration !== 'line-through') {
+            task.style.textDecoration = 'line-through';
+            this.activeTasks--;
+          } else {
+            task.style.textDecoration = 'none';
+            this.activeTasks++;
+          }
+          this.updateNumbers();
+        }
+
+        updateNumbers() {
+          this.all.innerText = `All: ${this.allTasks}`;
+          this.done.innerText = `Done: ${this.allTasks - this.activeTasks}`;
+          this.active.innerText = `Active: ${this.activeTasks}`;
+        }
+      }
+
+      const toDoList = new ToDoList();
+    </script>
+  </body>
+</html>
