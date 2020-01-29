@@ -1,0 +1,85 @@
+<!DOCTYPE>
+<html>
+  <head>
+    <title>Star Rating</title>
+    <style type="text/css">
+      ul {
+        transform: scaleX(-1);
+        float: left;
+      }
+      li.star {
+        display: inline-block;
+        cursor: pointer;
+        color: grey;
+      }
+      li.active {
+        color: orange;
+      }
+      li.active ~ li {
+        color: orange;
+      }
+      ul:hover>li.star {
+        color: grey;
+      }
+      ul:hover>li.star:hover {
+        color: orange;
+      }
+      li.star:hover ~ li {
+        color: orange;
+      }
+
+    </style>
+  </head>
+  <body>
+    <ul class="rating">
+      <li class="star" star-index="5">
+        <span>&#9733;</span>
+      </li>
+      <li class="star" star-index="4">
+        <span>&#9733;</span>
+      </li>
+      <li class="star" star-index="3">
+        <span>&#9733;</span>
+      </li>
+      <li class="star" star-index="2">
+        <span>&#9733;</span>
+      </li>
+      <li class="star" star-index="1">
+        <span>&#9733;</span>
+      </li>
+    </ul>
+    <script>
+      let selectedIndex = parseInt(localStorage.getItem('rate'), 10);
+      const rating = document.querySelector('ul.rating');
+      initialization();
+
+      function initialization() {
+        if(selectedIndex && 1 <= selectedIndex <= 5) {
+          const selected = rating.querySelector(`li[star-index='${selectedIndex}']`);
+          if(selected) {
+            selected.classList.add('active');
+          }
+        }
+      }
+      function click() {
+        const star = event.target.closest('.star');
+        if(star) {
+          reset();
+          star.classList.add('active');
+          selectedIndex = parseInt(star.getAttribute('star-index'), 10);
+          localStorage.setItem('rate', '' + selectedIndex)
+        }
+      }
+      function reset() {
+        Array.from(rating.children).some(element => {
+          if(element.classList.contains('active')) {
+            element.classList.remove('active');
+            return true;
+          }
+        });
+      }
+
+      document.querySelector('.rating').addEventListener('click', click);
+    </script>
+  </body>
+</html>
