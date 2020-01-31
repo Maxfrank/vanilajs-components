@@ -1,0 +1,97 @@
+<!DOCTYPE>
+<html>
+  <head>
+    <title>Flip Card</title>
+    <style type="text/css">
+    .container {
+      display: flex;
+    }
+      .card {
+        width: 300px;
+        height: 200px;
+        margin-left: 10px;
+        transform-style: preserve-3d;
+        transition: all 0.5s ease;
+        cursor: pointer;
+      }
+      .card.flipped {
+        transform: rotateY(180deg);
+      }
+      .front {
+        width: 100%;
+        height: 100%;
+        background-color: blue;
+        color: white;
+        text-align: center;
+        line-height: 200px;
+        backface-visibility: hidden;
+      }
+      .back {
+        width: 100%;
+        height: 100%;
+        margin-top: -200px;
+        background-color: green;
+        color: white;
+        text-align: center;
+        line-height: 200px;
+        backface-visibility: hidden;
+        transform: rotateY(180deg);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container" onclick="flipCard(event)">
+      <div class="card" card-index="1">
+        <div class="front">the front side</div>
+        <div class="back">the back side</div>
+      </div>
+      <div class="card" card-index="2">
+        <div class="front">the front side</div>
+        <div class="back">the back side</div>
+      </div>
+      <div class="card" card-index="3">
+        <div class="front">the front side</div>
+        <div class="back">the back side</div>
+      </div>
+      <div class="card" card-index="4">
+        <div class="front">the front side</div>
+        <div class="back">the back side</div>
+      </div>
+      <div class="card" card-index="5">
+        <div class="front">the front side</div>
+        <div class="back">the back side</div>
+      </div>
+    </div>
+    <script>
+      let layout = localStorage.getItem('layout') || '00000';
+      initialization();
+
+      function initialization() {
+        const str = layout.toString(2);
+        for(let i = 0; i < str.length; i++) {
+          if(str[i] === '1') {
+            const card = document.querySelector(`div[card-index='${i+1}']`);
+            if(card) {
+              card.classList.add('flipped');
+            }
+          }
+        }
+      }
+      function flipCard(e) {
+        if(!['front', 'back'].includes(e.target.className)) {
+          return;
+        }
+        const card = e.target.parentNode;
+        const index = +card.getAttribute('card-index')-1;
+        if(card.classList.contains('flipped')) {
+          card.classList.remove('flipped');
+          layout = layout.slice(0, index) + '0' + layout.slice(index + 1);
+        } else {
+          card.classList.add('flipped');
+          layout = layout.slice(0, index) + '1' + layout.slice(index + 1);
+        }
+        localStorage.setItem('layout', layout);
+      }
+    </script>
+  </body>
+</html>
