@@ -53,6 +53,11 @@ function flatten(arr) {
     return res;
 }
 
+// in ES6
+function flatten(arr) {
+    return arr.reduce((a, c) => a.concat(Array.isArray(c) ? flatten(c) : c), []);
+}
+
 // clean up html
 // (with regex)
 function stripScript() {
