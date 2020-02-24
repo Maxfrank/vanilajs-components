@@ -95,5 +95,29 @@ function shuffle(arr) {
         [arr[i], arr[j]] = [arr[j], arr[i]];
     }
 }
+// Stack shuffle (one line)
+function stackShuffle(deck) {
+    let count = deck.length;
+    while(count) {
+        deck.push(deck.splice(Math.floor(Math.random() * count, 1))[0]);
+        count -= 1;
+    }
+}
+
+// Riffle Shuffle
+function riffleShuffle(deck) {
+  const cutDeckVariant = deck.length / 2 + Math.floor(Math.random() * 9) - 4;
+  const leftHalf = deck.splice(0, cutDeckVariant);
+  let leeftCount = leftHalf.length;
+  let rightCount = deck.length - Math.floor(Math.random() * 4);
+  while(leftCount > 0) {
+    const takeAmount = Math.floor(Math.random() * 4);
+    deck.splice(rightCount, 0, ...leftHalf.splice(leeftCount, takeAmount));
+    leftCount -= takeAmount;
+    rightCount = rightCount - Math.floor(Math.random() * 4) + takeAmount;
+  }
+  deck.splice(rightCount, 0, ...leftHalf);
+}
+
 
 // js implement Promise
