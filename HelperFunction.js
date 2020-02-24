@@ -88,68 +88,12 @@ walk_the_dom(dom, function(element) {
   }
 });
 
+// shuffle an array
+function shuffle(arr) {
+    for(let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+    }
+}
 
 // js implement Promise
-// trail 1
-var promiseAsyncFunc = function() {
-  let fullfillCallback;
-  let rejectCallback;
-  setTimeout(() => {
-    const randomNumber = Math.random();
-    if(randomNumber > 0.5) {
-      fullfillCallback(randomNumber);
-    } else {
-      rejectCallback(randomNumber);
-    }
-  }, 1000);
-  return {
-    then: function(_fullfillCallback, _rejectCallback) {
-      fullfillCallback = _fullfillCallback;
-      rejectCallback = _rejectCallback;
-    }
-  }
-}
-
-promiseAsyncFunc().then(fulfillCallback, rejectCallback)
-
-// trail 2
-const PENDING = Symbol('pending');
-const FULFILLED = Symbol('fulfilled');
-const REJECTED = Symbol('rejected');
-var promiseAsyncFunc = function() {
-  let status = PENDING;
-  let fullfillCallback;
-  let rejectCallback;
-
-  return {
-    fulfill: function(value) {
-      if(status !== PENDING) {
-        return;
-      }
-      if(fullfillCallback && typeof fullfillCallback === 'function') {
-        fullfillCallback(value);
-        status = FULFILLED;
-      }
-    },
-    reject: function(err) {
-      if(status !== PENDING) {
-        return;
-      }
-      if(rejectCallback && typeof rejectCallback === 'function') {
-        rejectCallback(err);
-        status = REJECTED;
-      }
-    },
-    promise: {
-      then: function(_fullfillCallback, _rejectCallback) {
-        fullfillCallback = _fullfillCallback;
-        rejectCallback = _rejectCallback;
-      }
-    }
-  }
-}
-
-
-
-
-.
