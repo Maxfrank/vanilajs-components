@@ -4,9 +4,6 @@
 <head>
     <meta name="viewport" content="width=device-width,initial-scale=1.0" />
     <style>
-        * {
-            box-sizing: border-box;
-        }
 
         table {
             border-collapse: collapse;
@@ -15,6 +12,7 @@
 
         td,
         th {
+            box-sizing: content-box;
             padding: 5px 15px;
             text-align: left;
         }
@@ -89,7 +87,12 @@
         thead.addEventListener('mousedown', event => {
             pressed = true;
             currentTh = event.target;
-            startWidth = currentTh.offsetWidth;
+            if(getComputedStyle(currentTh)['box-sizing'] === 'border-box') {
+                startWidth = currentTh.offsetWidth;
+            } else {
+                startWidth = currentTh.offsetWidth - parseInt(getComputedStyle(currentTh)['padding-left']) - parseInt(getComputedStyle(currentTh)['padding-right']);
+            }
+            
             startX = event.pageX;
         });
 
