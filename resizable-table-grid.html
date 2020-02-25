@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 1000px;
+        }
+
+        td,
+        th {
+            padding: 5px 15px;
+            text-align: left;
+        }
+
+        th {
+            cursor: col-resize;
+        }
+
+        table,
+        th,
+        td {
+            border: 1px solid #000;
+        }
+    </style>
+</head>
+<title>Resizable Table</title>
+
+<body>
+    <table class="table table-striped table-bordered table-resizable" id="selected-table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Profession</th>
+                <th>Address</th>
+                <th>Allergies</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Nitro Cowabunga</td>
+                <td>Magician</td>
+                <td>1600 Pennsylvania Ave, Washington DC</td>
+                <td>Poison</td>
+            </tr>
+            <tr>
+                <td>Bandolier Uppercuts</td>
+                <td>Pokemon Trainer</td>
+                <td>1 Infinite Loop, Cupertino, California</td>
+                <td>NKDA</td>
+            </tr>
+            <tr>
+                <td>Corgi Nyquist</td>
+                <td>Sea Captain</td>
+                <td>245819637.001 Popcicle Circle Apartment 54634354, Hastings, Nebraska</td>
+                <td>Tigers</td>
+            </tr>
+            <tr>
+                <td>Kombucha Bonzai</td>
+                <td>Baby</td>
+                <td>3051 Van Brunt Boulevard, Kansas City, Missouri</td>
+                <td>Plutonium</td>
+            </tr>
+        </tbody>
+    </table>
+    <script>
+        const table = document.getElementById('selected-table');
+        const thead = table.querySelector('thead');
+        let startX, startWidth, pressed = false, currentTh;
+
+        document.addEventListener('mousemove', event => {
+            if(pressed) {
+                currentTh.style.width = `${startWidth + (event.pageX - startX)}px`;
+            }
+        });
+
+        document.addEventListener('mouseup', event => {
+            if(pressed) {
+                pressed = false;
+            }
+        });
+
+        thead.addEventListener('mousedown', event => {
+            pressed = true;
+            currentTh = event.target;
+            startWidth = currentTh.offsetWidth;
+            startX = event.pageX;
+        });
+
+        thead.addEventListener('dblclick', event => {
+            thead.querySelectorAll('th').forEach(th => {
+                th.style.width = '';
+            })
+        });
+    </script>
+</body>
+
+</html>
