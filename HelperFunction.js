@@ -31,6 +31,42 @@ let traverse = (obj, res) => {
   });
 };
 
+// compute diff
+function computeDif(obj1, obj2, difObj = {}) {
+    Object.keys(obj1).forEach(prop => {
+        if (obj2[prop] === undefined || obj2[prop] === null) {
+            difObj[prop] = obj1[prop];
+        } else if (typeof obj1[prop] === 'string') {
+            if (obj1[prop].length === 1) {
+                difObj[prop] = obj1[prop].charCodeAt(0) - obj2[prop].charCodeAt(0);
+            } else if (obj1[prop].length > 1) {
+                if(difObj[prop] === undefined) {
+                    difObj[prop] = [];
+                }
+                computeDif(obj1[prop].split(''), obj2[prop].split(''), difObj[prop]);
+            }
+        } else if (typeof obj1[prop] === 'number') {
+            difObj[prop] = obj1[prop] - obj2[prop];
+        } else if (obj1[prop] instanceof Array) {
+            if(difObj[prop] === undefined) {
+                difObj[prop] = [];
+            }
+            computeDif(obj1[prop], obj2[prop], difObj[prop]);
+        } else if(typeof obj1[prop] === 'function') {
+            if(difObj[prop] === undefined) {
+                difObj[prop] = [];
+            }
+            computeDif(obj1[prop].toString(), obj2[prop].toString(), difObj[prop]);
+        } else if (obj1[prop] instanceof Object) {
+            if(difObj[prop] === undefined) {
+                difObj[prop] = {};
+            }
+            computeDif(obj1[prop], obj2[prop], difObj[prop]);
+        }
+    });
+    return difObj;
+}
+
 // flatten array method iteratively
 let arr = [1, 2, [3, 4, 5, [6, 7], 8], 9, 10, [11, [12, 13]]];
 
