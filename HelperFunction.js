@@ -31,6 +31,23 @@ let traverse = (obj, res) => {
   });
 };
 
+// deep copy
+function extend(target, source, deep) {
+    for(let key in source) {
+        if(deep && source[key] instanceof Object) {
+            if(source[key] instanceof Array && !(target[key] instanceof Array)) {
+                target[key] = [];
+            }
+            if(source[key] instanceof Object && !(target[key] instanceof Object)) {
+                target[key] = {};
+            }
+            extend(target[key], source[key], deep);
+        } else if(source[key] !== undefined) {
+            target[key] = source[key];
+        }
+    }
+}
+
 // compute diff
 function computeDif(obj1, obj2, difObj = {}) {
     Object.keys(obj1).forEach(prop => {
