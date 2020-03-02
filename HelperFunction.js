@@ -184,9 +184,7 @@ function async getAllResources(url) {
         if(data.next) {
             return await getNextResource(url, data.next, arr);
         }
-    }).catch(e) {
-        console.error(e);
-    };
+    }).catch(err => console.errorr(err));
 }
 
 function getNextResource(baseUrl, next, arr) {
