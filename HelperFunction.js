@@ -174,3 +174,29 @@ function riffleShuffle(deck) {
 
 
 // js implement Promise
+
+// recursion for fetch()
+function async getAllResources(url) {
+    const arr = [];
+    fetch(url).then(res => {
+        const data = res.json();
+        arr.push(data.resource);
+        if(data.next) {
+            return await getNextResource(url, data.next, arr);
+        }
+    }).catch(e) {
+        console.error(e);
+    };
+}
+
+function getNextResource(baseUrl, next, arr) {
+    return fetch(baseUrl + next).then(res => {
+        const data = res.json();
+        arr.push(data.resource);
+        if(data.next) {
+            getNextResource(baseUrl, data.next, arr);
+        } else {
+            return arr;
+        }
+    });
+}
