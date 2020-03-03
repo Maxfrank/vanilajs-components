@@ -198,3 +198,35 @@ function getNextResource(baseUrl, next, arr) {
         }
     });
 }
+
+// Promise version
+function getAllResources(progress, url, planets = []) {
+    return new Promise((resolve, reject) => {
+        fetch(url)
+            .then(response => {
+                if(response.status !== 200) {
+                    throw `${response.status}: ${response.statusText}`;
+                }
+                response.json()
+                    .then(data => {
+                        planets = planets.concat(data.results);
+                        if(data.next) {
+                            progress(planets);
+                            getAllResources(progress, data.next, planets).then(resolve).catch(reject);
+                        } else {
+                            resolve(planets);
+                        }
+                    })
+                    .catch(reject)
+            }).catch(reject)
+            .catch(reject)
+    });
+}
+
+function progressCallback(planets) {
+    console.log(planets.length);
+}
+
+getAllResources(progressCallback, 'https://swapi.co/api/planets/')
+    .then(planets => console.log(planets.map(planet => planet.url)))
+    .catch(console.error);
