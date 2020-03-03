@@ -176,7 +176,7 @@ function riffleShuffle(deck) {
 // js implement Promise
 
 // recursion for fetch()
-function async getAllResources(url) {
+async function getAllResources(url) {
     const arr = [];
     fetch(url).then(res => {
         const data = res.json();
@@ -197,6 +197,22 @@ function getNextResource(baseUrl, next, arr) {
             return arr;
         }
     });
+}
+
+// async/await versiion
+async function getAllResources(progress, url, planets = []) {
+    const response = await fetch(url);
+    if (response.status !== 200) {
+        throw `${response.status}: ${response.statusText}`;
+    }
+    const data = await response.json();
+    planets = planets.concat(data.results);
+    if (data.next) {
+        progress(planets);
+        return await getAllResources(progress, data.next, planets);
+    } else {
+        return planets;
+    }
 }
 
 // Promise version
