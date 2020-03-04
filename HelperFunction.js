@@ -215,6 +215,26 @@ async function getAllResources(progress, url, planets = []) {
     }
 }
 
+// for traverse version with await
+async function getAllResources(progress, url, planets = []) {
+    let response;
+    while(true) {
+        response = await fetch(url);
+        if(response.status !== 200) {
+            break;
+        }
+        const data = await response.json();
+        planets = planets.concat(data.results);
+        progress(planets);
+        if(data.next) {
+            url = data.next;
+        } else {
+            break;
+        }
+    };
+    return planets;
+}
+
 // Promise version
 function getAllResources(progress, url, planets = []) {
     return new Promise((resolve, reject) => {
