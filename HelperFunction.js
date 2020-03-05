@@ -111,6 +111,17 @@ function flatten(arr) {
     return arr.reduce((a, c) => a.concat(Array.isArray(c) ? flatten(c) : c), []);
 }
 
+// deep flatten js object
+function flattenObjArr(arr) {
+    return arr.reduce((a, c) => {
+        a = a.concat(c.items);
+        if(c.items) {
+            a = a.concat(flattenObjArr(c.items));
+            c.items = [];
+        }
+    }, []);
+}
+
 // clean up html
 // (with regex)
 function stripScript() {
