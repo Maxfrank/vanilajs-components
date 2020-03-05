@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+    <style>
+        #normal-table {
+            border: 1px solid grey;
+        }
+
+        td,
+        th {
+            border: 1px solid grey;
+        }
+
+        .table-container {
+            display: flex;
+            justify-content: center;
+        }
+    </style>
+</head>
+<title>Normal Table</title>
+
+<body>
+    <div class="table-container">
+        <table id="normalTable">
+            <thead>
+                <tr>
+                    <th data-action="sort" data-col="name" data-order="asc" data-type="string">Name</th>
+                    <th data-action="sort" data-col="dob" data-order="asc" data-type="date">Dob</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </div>
+    <script>
+        let data = [{
+                name: 'John',
+                dob: '2018-09-01',
+                id: 'jh'
+            },
+            {
+                name: 'Sarah',
+                dob: '2017-08-01',
+                id: 'sa'
+            },
+            {
+                name: 'Scott',
+                dob: '1960-08-01',
+                id: 'sc'
+            }
+        ];
+
+
+        class Table {
+            constructor(elem, data) {
+                this._tbody = elem.tBodies[0];
+                this.data = Object.assign([], data);
+                elem.onclick = this.clickHandler.bind(this);
+                this.renderHtml();
+            }
+
+            clickHandler(event) {
+                const targetElement = event.target;
+                const dataset = targetElement.dataset;
+                if(dataset.action === 'sort') {
+                    this[dataset.action](dataset.type, dataset.order, dataset.col);
+                    dataset.order = dataset.order === 'asc' ? 'desc' : 'asc';
+                } else if(dataset.action === 'delete') {
+                    this[dataset.action](dataset.row);
+                }
+            }
+
+            sort(sortType, sortOrder, property) {
+                this.data = this.data.sort((a, b) => {
+                    switch (sortType) {
+                        case 'string':
+                            return sortOrder === 'asc' ? a[property].localeCompare(b[property]) : b[
+                                property].localeCompare(a[property]);
+                        case 'number':
+                            return sortOrder === 'asc' ? a[property] - b[property] : b[property] - a[
+                                property];
+                        case 'date':
+                            return sortOrder === 'asc' ? new Date(a[property]).getTime() - new Date(b[
+                                property]).getTime() : new Date(
+                                b[property]).getTime() - new Date(a[property]).getTime();
+                    }
+                });
+                this.renderHtml();
+            }
+
+            delete(index) {
+                this.data.splice(index, 1);
+                this.renderHtml();
+            }
+
+            renderHtml() {
+                const html = this.data.map((user, i) => {
+                    return `<tr>
+                            <td>${user.name}</td>
+                            <td>${user.dob}</td>
+                            <td data-action="delete" data-row="${i}">X</td>
+                        </tr>`;
+                }).join('');
+                this._tbody.innerHTML = html;
+            }
+        }
+
+        new Table(normalTable, data);
+    </script>
+</body>
+
+</html>
