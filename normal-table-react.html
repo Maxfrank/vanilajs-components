@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Hello World</title>
+    <script src="https://unpkg.com/react@16/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="text/babel">
+      const originalData = [{
+              name: 'John',
+              dob: '2018-09-01',
+              id: 'jh'
+          },
+          {
+              name: 'Sarah',
+              dob: '2017-08-01',
+              id: 'sa'
+          },
+          {
+              name: 'Amy',
+              dob: '1960-08-01',
+              id: 'sc'
+          }
+      ];
+      class App extends React.Component {
+        constructor(props) {
+          super(props);
+          this.state = {
+            data: [],
+            ascOrder: true
+          }
+        }
+        componentDidMount() {
+          this.setState({
+            data: originalData
+          });
+        }
+        sort(type) {
+          const sortedData = [...this.state.data];
+          const order = this.state.ascOrder;
+          if(type === 'string') {
+            sortedData.sort((a, b) => order === true ? a.name.localeCompare(b.name) : b.name.localeCompare((a.name)));
+          } else if(type === 'date') {
+            sortedData.sort((a, b) => order === true ? new Date(a.dob).getTime() - new Date(b.dob).getTime() : new Date(b.dob).getTime() - new Date(a.dob).getTime());
+          }
+          this.setState({
+            data: sortedData,
+            ascOrder: !order
+          });
+        }
+
+        delete(index) {
+          this.setState(state => ({
+            data: [...state.data.slice(0, index), ...state.data.slice(index+1)]
+          }));
+        }
+
+        render() {
+          return <NormalTable sort={this.sort.bind(this)} delete={this.delete.bind(this)} data={this.state.data} />
+        }
+      }
+
+      function NormalTable(props) {
+        return (
+          <table>
+            <thead>
+              <tr>
+                <th onClick={() => props.sort('string')}>Name</th>
+                <th onClick={() => props.sort('date')}>DoB</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              { props.data.map((item, index) => (
+                <tr key={index}>
+                  <td>{item.name}</td>
+                  <td>{item.dob}</td>
+                  <td onClick={() => props.delete(index)}>X</td>
+                </tr>
+              )) }
+            </tbody>
+          </table>
+        );
+      }
+
+      ReactDOM.render(
+        <App />,
+        document.getElementById('root')
+      );
+
+    </script>
+  </body>
+</html>
