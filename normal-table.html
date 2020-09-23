@@ -74,7 +74,7 @@
             }
 
             sort(sortType, sortOrder, property) {
-                this.data = this.data.sort((a, b) => {
+                this.data.sort((a, b) => {
                     switch (sortType) {
                         case 'string':
                             return sortOrder === 'asc' ? a[property].localeCompare(b[property]) : b[
