@@ -75,7 +75,6 @@ function fetchData() {
 retry(fetchData, 3);
 
 // Event Emitter
-// Event Emitter
 class EventEmitter {
   constructor() {
     this.listeners = new Map();
