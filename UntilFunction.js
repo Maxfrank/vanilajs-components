@@ -44,10 +44,10 @@ const add = function(a) {
 const adder = memorize(add);
 
 // retry
-function retry(tn, times, delay = 100) {
+function retry(fn, times, delay = 100) {
   let err = null;
   return new Promise(function(resolve, reject) {
-    function atemp() {
+    function attemp() {
       fn().then(resolve).catch(function(err) {
         if(times === 0) {
           reject(err);
@@ -73,3 +73,41 @@ function fetchData() {
 }
 
 retry(fetchData, 3);
+
+// Event Emitter
+// Event Emitter
+class EventEmitter {
+  constructor() {
+    this.listeners = new Map();
+  }
+  addEventListener(label, fn) {
+    if(!this.listeners.has(label)) {
+      this.listeners.set(label, []);
+    } else {
+      this.listeners.get(label).push(fn);
+    }
+  }
+  removeEventtListener(label, fn) {
+    const fnArr = this.listeners.get(label);
+    if(fnArr && fnArr.length) {
+      const index = fnArr.findIndex(f => f === fn);
+      if(index > -1) {
+        fnArr.splice(index, 1);
+        return true;
+      }
+    }
+    return false;
+  }
+  emit(label, ...args) {
+    const fnArr = this.listeners.get(label);
+    if(fnArr && fnArr.length) {
+      fnArr.forEach(f => {
+        f(...args);
+      });
+      return true;
+    }
+    return false;
+  }
+}
+
+
