@@ -90,23 +90,19 @@ function toArray(str) {
     const res = [];
     let j = 1;
     for(let i = 0; i < str.length; i++) {
-        switch(str[i]) {
-            case ',':
+        if(str[i] === ',' || str[i] === ']') {
+            if(!isNaN(str.substring(j, i))) {
                 res.push(+str.substring(j, i));
-                j = i + 1;
-                break;
-            case '[':
-                if(i !== 0) {
-                    const remain = str.substring(i);
-                    i += remain.indexOf(']') + 1;
-                    res.push(toArray(remain));
-                }
-                break;
-            case ']':
-                if(!isNaN(str.substring(j, i))) {
-                    res.push(+str.substring(j, i));
-                }
-                return res;
+            }
+            j = i + 1;
+        } else if(str[i] === '[') {
+            if(i + 1 !== j) {
+                const startIndex = i;
+                const endIndex = str.substring(0, str.length - 1).lastIndexOf(']');
+                i = endIndex;
+                j = i;
+                res.push(toArray(str.substring(startIndex, endIndex + 1)));
+            }
         }
     }
     return res;
