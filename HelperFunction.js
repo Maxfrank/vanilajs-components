@@ -19,7 +19,7 @@ function transform(arr) {
     return arr.reduce((res, item) => merge(res, item.split('.')), {});
 }
 
-// traver an object
+// traverse an object
 let obj = { 1: 'a', 2: 'b', 3: { 4: 'd', 5: 'e' } };
 let traverse = (obj, res) => {
   Object.keys(obj).forEach(prop => {
@@ -82,6 +82,34 @@ function computeDif(obj1, obj2, difObj = {}) {
         }
     });
     return difObj;
+}
+
+// convert stringified array to Array
+const output = toArray('[1, 2, 3, [4, 5, [6,7,8, [9,10]]]]');
+function toArray(str) {
+    const res = [];
+    let j = 1;
+    for(let i = 0; i < str.length; i++) {
+        switch(str[i]) {
+            case ',':
+                res.push(+str.substring(j, i));
+                j = i + 1;
+                break;
+            case '[':
+                if(i !== 0) {
+                    const remain = str.substring(i);
+                    i += remain.indexOf(']') + 1;
+                    res.push(toArray(remain));
+                }
+                break;
+            case ']':
+                if(!isNaN(str.substring(j, i))) {
+                    res.push(+str.substring(j, i));
+                }
+                return res;
+        }
+    }
+    return res;
 }
 
 // flatten array method iteratively
