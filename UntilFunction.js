@@ -45,7 +45,6 @@ const adder = memorize(add);
 
 // retry
 function retry(fn, times, delay = 100) {
-  let err = null;
   return new Promise(function(resolve, reject) {
     function attemp() {
       fn().then(resolve).catch(function(err) {
